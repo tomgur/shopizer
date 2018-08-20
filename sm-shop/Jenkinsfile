@@ -19,11 +19,11 @@ pipeline {
                 }
             }
         }
-        stage('Build RPM') {
+        stage('Build WAR') {
             steps {
                 echo '------------ Building the RPM ------------'
                 withEnv(["JAVA_HOME=${ tool 'jdk1.8' }", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
-                    sh "mvn --batch-mode -V -U -e clean package -DskipTests -P rpm"
+                    sh "mvn --batch-mode -V -U -e clean package -DskipTests"
                 }
                 archiveArtifacts artifacts: 'target/*.war', onlyIfSuccessful: true
             }
