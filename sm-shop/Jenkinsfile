@@ -1,0 +1,33 @@
+#!groovy
+pipeline {
+    agent {label 'rpm'}
+
+    stages {
+        stage('Build') {
+            steps {
+                echo '------------ Building ------------'
+                withEnv(["JAVA_HOME=${ tool 'jdk1.8' }", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
+                    sh "mvn --batch-mode -V -U -e clean compile"
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                echo '------------ Testing ------------'
+                withEnv(["JAVA_HOME=${ tool 'jdk1.8' }", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
+                    sh "mvn --batch-mode -V -U -e clean test"
+                }
+            }
+        }
+        stage('Build RPM') {
+            steps {
+                echo '------------ Building the RPM ------------'
+                withEnv(["JAVA_HOME=${ tool 'jdk1.8' }", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
+                    sh "mvn --batch-mode -V -U -e clean package -DskipTests -P rpm"
+                }
+                archiveArtifacts artifacts: 'target/*.war', onlyIfSuccessful: true
+            }
+
+        }
+    }
+}
