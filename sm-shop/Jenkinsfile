@@ -1,5 +1,4 @@
 #!groovy
-import java.rmi.server.ExportException
 
 pipeline {
     stages {
@@ -10,23 +9,19 @@ pipeline {
                 withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
                     sh "mvn --batch-mode -V -U -e clean compile"
                 }
-
             }
         }
     }
+    stage('Test') {
+        steps {
+            echo '------------ Testing ------------'
 
-            {
-                stage('Test') {
-                    steps {
-                        echo '------------ Testing ------------'
-
-                        withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
-                            sh "mvn --batch-mode -V -U -e clean test"
-                        }
-
-                    }
-                }
+            withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
+                sh "mvn --batch-mode -V -U -e clean test"
             }
+
+        }
+    }
     stage('Build WAR') {
         steps {
             echo '------------ Building the WAR ------------'
