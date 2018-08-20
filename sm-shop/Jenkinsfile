@@ -7,8 +7,8 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+                echo '------------ Building ------------'
                 try {
-                    echo '------------ Building ------------'
                     withEnv(["JAVA_HOME=${ tool 'jdk1.8' }", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
                         sh "mvn --batch-mode -V -U -e clean compile"
                     }
@@ -19,8 +19,8 @@ pipeline {
         }
         stage('Test') {
             steps {
+                echo '------------ Testing ------------'
                 try {
-                    echo '------------ Testing ------------'
                     withEnv(["JAVA_HOME=${ tool 'jdk1.8' }", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
                         sh "mvn --batch-mode -V -U -e clean test"
                     }
@@ -31,8 +31,8 @@ pipeline {
         }
         stage('Build WAR') {
             steps {
+                echo '------------ Building the WAR ------------'
                 try {
-                    echo '------------ Building the WAR ------------'
                     withEnv(["JAVA_HOME=${ tool 'jdk1.8' }", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
                         sh "mvn --batch-mode -V -U -e clean package -DskipTests"
                     }
