@@ -29,5 +29,12 @@ pipeline {
             }
 
         }
+        stage('Run Build-Docekr-Image Job') {
+            steps {
+                echo '------------ Building the Shopize Docker Image ------------'
+                build job: 'Build-Docker-Image', parameters: [string(name: 'PARENT_BUILD_NUM', value: '$BUILD_NUMBER')], wait: false
+            }
+
+        }
     }
 }
