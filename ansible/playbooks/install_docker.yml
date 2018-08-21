@@ -2,4 +2,4 @@
 - hosts: slaves
   tasks:
   - include_role:
-      name: docker_host
+      name: ../rolses/docker_host

@@ -2,4 +2,4 @@
 - hosts: slaves
   tasks:
   - include_role:
-      name: jenkins_slave
+      name: ../roles/jenkins_slave
