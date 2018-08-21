@@ -19,20 +19,26 @@ pipeline {
                 }
             }
         }
-        stage('Build WAR') {
+        stage('Build aftifacts war & docker image') {
             steps {
-                echo '------------ Building the RPM ------------'
+                echo '------------ Building the WAR ------------'
                 withEnv(["JAVA_HOME=${ tool 'jdk1.8' }", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
                     sh "mvn --batch-mode -V -U -e clean package -DskipTests"
                 }
+//                Deploy should be here....
+                echo '------------ Building the Shopizer Docker Image ------------'
+                build job: 'Build-Docker-Image', parameters: [string(name: 'PARENT_BUILD_NUM', value: '${BUILD_NUMBER}')]
                 archiveArtifacts artifacts: 'sm-shop/target/*.war', onlyIfSuccessful: true
             }
 
         }
-        stage('Run Build-Docekr-Image Job') {
-            steps {
-                echo '------------ Building the Shopize Docker Image ------------'
-                build job: 'Build-Docker-Image', parameters: [string(name: 'PARENT_BUILD_NUM', value: '$BUILD_NUMBER')], wait: false
+        stage('Integration testing') {
+            node ('docker') {
+                steps {
+                    echo 'Running shopize:${BUILD_NUMBER} docker image'
+                    build job: 'Run-Docker-Image', parameters: [string(name: 'IMAGE_VERSION', value: '${BUILD_NUMBER}'),
+                                                                string(name: 'IMAGE_NAME', value: 'shopizer')]
+                }
             }
 
         }
