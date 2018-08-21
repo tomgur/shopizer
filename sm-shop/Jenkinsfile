@@ -1,12 +1,12 @@
 #!groovy
 pipeline {
-    agent {label 'rpm'}
+    agent { label 'rpm' }
 
     stages {
         stage('Build') {
             steps {
                 echo '------------ Building ------------'
-                withEnv(["JAVA_HOME=${ tool 'jdk1.8' }", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
+                withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
                     sh "mvn --batch-mode -V -U -e clean compile"
                 }
             }
@@ -14,7 +14,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo '------------ Testing ------------'
-                withEnv(["JAVA_HOME=${ tool 'jdk1.8' }", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
+                withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
                     sh "mvn --batch-mode -V -U -e clean test"
                 }
             }
@@ -22,7 +22,7 @@ pipeline {
         stage('Build aftifacts war & docker image') {
             steps {
                 echo '------------ Building the WAR ------------'
-                withEnv(["JAVA_HOME=${ tool 'jdk1.8' }", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
+                withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
                     sh "mvn --batch-mode -V -U -e clean package -DskipTests"
                 }
 //                Deploy should be here....
@@ -32,15 +32,14 @@ pipeline {
             }
 
         }
-        stage('Integration testing') {
-            node ('docker') {
+        node('docker') {
+            stage('Integration testing') {
                 steps {
                     echo 'Running shopize:${BUILD_NUMBER} docker image'
                     build job: 'Run-Docker-Image', parameters: [string(name: 'IMAGE_VERSION', value: '${BUILD_NUMBER}'),
                                                                 string(name: 'IMAGE_NAME', value: 'shopizer')]
                 }
             }
-
         }
     }
 }
