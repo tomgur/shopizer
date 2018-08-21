@@ -44,3 +44,6 @@ Calling the shopizer-pipeline job
 Ansible
 -------
 Docker enabled hosts were configured with the install_docker playbook under ansible/playbooks
+
+
+
