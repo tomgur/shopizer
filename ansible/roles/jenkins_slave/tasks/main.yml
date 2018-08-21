@@ -1,0 +1,16 @@
+---
+- name: Copy Java install script
+  copy:
+    src: ../files/jdk1_8_download.sh
+    dest: /tmp/jdk1_8_download.sh
+    owner: root
+    group: root
+    mode: 0755
+  become: yes
+
+- name: run the installation script
+  command: sh /tmp/jdk1_8_download.sh
+  become: yes
+
+# install the rpm
+# test with java -version
