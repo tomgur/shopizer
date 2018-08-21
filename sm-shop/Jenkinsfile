@@ -1,6 +1,6 @@
 #!groovy
 pipeline {
-    agent { label 'rpm' }
+    agent { label 'slave' }
 
     stages {
         stage('Build') {
@@ -13,29 +13,39 @@ pipeline {
         }
         stage('Test') {
             steps {
-                echo '------------ Testing ------------'
-                withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
-                    sh "mvn --batch-mode -V -U -e clean test"
+                try {
+                    echo '------------ Testing ------------'
+                    withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
+                        sh "mvn --batch-mode -V -U -e clean test"
+                    }
+                } catch (e) {
+                    currentBuild.result = 'FAILURE'
+                    throw e
                 }
             }
         }
         stage('Build aftifacts war & docker image') {
             steps {
-                echo '------------ Building the WAR ------------'
-                withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
-                    sh "mvn --batch-mode -V -U -e clean package -DskipTests"
-                }
+                try {
+                    echo '------------ Building the WAR ------------'
+                    withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
+                        sh "mvn --batch-mode -V -U -e clean package -DskipTests"
+                    }
+                    echo '------------ Building the Shopizer Docker Image ------------'
+                    build job: 'Build-Docker-Image', parameters: [string(name: 'PARENT_BUILD_NUM', value: "${BUILD_NUMBER}")]
+                    archiveArtifacts artifacts: 'sm-shop/target/*.war', onlyIfSuccessful: true
 //                Deploy should be here....
-                echo '------------ Building the Shopizer Docker Image ------------'
-                build job: 'Build-Docker-Image', parameters: [string(name: 'PARENT_BUILD_NUM', value: '${BUILD_NUMBER}')]
-                archiveArtifacts artifacts: 'sm-shop/target/*.war', onlyIfSuccessful: true
+                } catch (e) {
+                    currentBuild.result = 'FAILURE'
+                    throw e
+                }
             }
 
         }
         stage('Integration testing') {
             steps {
-                echo 'Running shopize:${BUILD_NUMBER} docker image'
-                build job: 'Run-Docker-Image', parameters: [string(name: 'IMAGE_VERSION', value: '${BUILD_NUMBER}'),
+                echo "Running shopize:${BUILD_NUMBER} docker image"
+                build job: 'Run-Docker-Image', parameters: [string(name: 'IMAGE_VERSION', value: "${BUILD_NUMBER}"),
                                                             string(name: 'IMAGE_NAME', value: 'shopizer')]
                 echo 'This is where we would setup integration tests - selnium etc...'
             }
