@@ -1,7 +1,12 @@
-Shopizer 2.2.0 (for java 1.8 +)
+Tikal - Home Task - Tom Gur
 -------------------
 
-Java open source e-commerce software
+The Project is a Java open source e-commerce software forked from Github
+
+*Tested with JDK1.8*
+
+*Compilation with JDK1.10 failed miserably*
+
 
 To get the code:
 -------------------
@@ -15,7 +20,6 @@ From the command line with Maven installed:
 	$ cd shopizer
 	$ mvn clean install
 	
-
 Run the application from Tomcat 
 -------------------
 copy sm-shop/target/ROOT.war to tomcat or any other application server deployment dir
@@ -30,5 +34,13 @@ If you are using Tomcat, edit catalina.bat for windows users or catalina.sh for 
 
 Jenkins server
 ---------------
+Jenkins is running in a Docker container in an EC2 instance
+
 http://ec2-18-130-111-175.eu-west-2.compute.amazonaws.com:8080
-push to this github repo will trigger a webhook running the Pipeline Job 
+
+Push to this github repo will trigger a webhook 
+Calling the shopizer-pipeline job
+
+Ansible
+-------
+Docker enabled hosts were configured with the install_docker playbook under ansible/playbooks
