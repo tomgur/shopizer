@@ -1,0 +1,5 @@
+---
+- hosts: slaves
+  tasks:
+  - include_role:
+      name: jenkins_slave
