@@ -10,3 +10,20 @@
     name: ec2-user
     groups: docker
   become: true
+
+- name: Copy service init file
+  copy:
+    src: ../files/docker
+    dest: /etc/init.d/docker
+    owner: root
+    group: root
+    mode: 0755
+
+- name: enable docker service
+  command: systemctl enable docker
+  register: myoutput
+
+- name: start docker service
+  service:
+    name: docker
+    state: started
