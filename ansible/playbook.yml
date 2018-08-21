@@ -1,5 +1,5 @@
 ---
 - hosts: slaves
-  roles:
-    - docker_host
-
+  tasks:
+  - import_role:
+    name: docker_host
