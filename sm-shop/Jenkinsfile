@@ -2,7 +2,7 @@
 pipeline {
     agent { label 'slave' }
     environment {
-        HEAD_BUILD_NUMBER=${BUILD_NUMBER}
+        HEAD_BUILD_NUMBER="${BUILD_NUMBER}"
     }
 
     stages {
@@ -29,7 +29,7 @@ pipeline {
                     sh "mvn --batch-mode -V -U -e clean package -DskipTests"
                 }
                 echo '------------ Building the Shopizer Docker Image ------------'
-                build job: 'Build-Docker-Image', parameters: [string(name: 'PARENT_BUILD_NUM', value: $HEAD_BUILD_NUMBER)]
+                build job: 'Build-Docker-Image', parameters: [string(name: 'PARENT_BUILD_NUM', value: "${HEAD_BUILD_NUMBER}")]
                 archiveArtifacts artifacts: 'sm-shop/target/*.war', onlyIfSuccessful: true
 //                Deploy should be here....
             }
@@ -37,7 +37,7 @@ pipeline {
         stage('Integration testing') {
             steps {
                 echo "Running shopize:${BUILD_NUMBER} docker image"
-                build job: 'Run-Docker-Image', parameters: [string(name: 'IMAGE_VERSION', value: ${HEAD_BUILD_NUMBER}),
+                build job: 'Run-Docker-Image', parameters: [string(name: 'IMAGE_VERSION', value: "${HEAD_BUILD_NUMBER}"),
                                                             string(name: 'IMAGE_NAME', value: 'shopizer')]
                 echo 'This is where we would setup integration tests - selnium etc...'
             }
