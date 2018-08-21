@@ -38,7 +38,7 @@ pipeline {
             steps {
                 echo "Running shopize:${BUILD_NUMBER} docker image"
                 build job: 'Run-Docker-Image', parameters: [string(name: 'IMAGE_VERSION', value: "${HEAD_BUILD_NUMBER}"),
-                                                            string(name: 'IMAGE_NAME', value: 'shopizer')]
+                                                            string(name: 'IMAGE_NAME', value: 'shopizer')], wait: false
                 echo 'This is where we would setup integration tests - selnium etc...'
             }
         }
