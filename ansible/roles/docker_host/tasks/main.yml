@@ -22,9 +22,10 @@
 
 - name: enable docker service
   command: systemctl enable docker
-  register: myoutput
+  become: yes
 
 - name: start docker service
   service:
     name: docker
     state: started
+  become: yes
