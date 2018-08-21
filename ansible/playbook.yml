@@ -1,19 +1,5 @@
 ---
 - hosts: slaves
-  remote_user: ec2-user
+  roles:
+    - docker_host
 
-  tasks:
-  - name: Install Docker
-    yum:
-      name: docker
-      state: latest
-    become: ture
-
-  - name: add ec2-user to docker group
-    user:
-      name: ec2-user
-      groups: docker
-    become: true
-
-  - name: print ec2-user's id
-    shell: echo id ec2-user
