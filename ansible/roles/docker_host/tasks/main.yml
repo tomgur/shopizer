@@ -3,13 +3,13 @@
   yum:
     name: docker
     state: latest
-  become: ture
+  become: yes
 
 - name: add ec2-user to docker group
   user:
     name: ec2-user
     groups: docker
-  become: true
+  become: yes
 
 - name: Copy service init file
   copy:
