@@ -7,7 +7,7 @@ VOLUME /tmp
 RUN rm -rf /usr/local/tomcat/webapps/ROOT
 
 # todo: add an arg for path
-ADD ../ROOT.war /usr/local/tomcat/webapps/
+ADD ./ROOT.war /usr/local/tomcat/webapps/
 
 ENV JAVA_OPTS="-Xmx1024m"
 
