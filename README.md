@@ -20,11 +20,6 @@ Run the application from Tomcat
 -------------------
 copy sm-shop/target/ROOT.war to tomcat or any other application server deployment dir
 
-Increase heap space to 1024 m or at least 512 m
-
-### Heap space configuration in Tomcat:
-
-
 If you are using Tomcat, edit catalina.bat for windows users or catalina.sh for linux / Mac users
 
 	in Windows
@@ -32,3 +27,8 @@ If you are using Tomcat, edit catalina.bat for windows users or catalina.sh for 
 	
 	in Linux / Mac
 	export JAVA_OPTS="-Xms1024m -Xmx1024m -XX:MaxPermSize=256m" 
+
+Jenkins server
+---------------
+http://ec2-18-130-111-175.eu-west-2.compute.amazonaws.com:8080
+push to this github repo will trigger a webhook running the Pipeline Job 
