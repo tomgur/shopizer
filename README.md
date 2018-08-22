@@ -20,6 +20,14 @@ From the command line with Maven installed:
 	$ cd shopizer
 	$ mvn clean install
 	
+Docker Image - (only after mvn install)
+------------
+From the command line with Docker installed
+
+    $ cd sm-shop
+    $ docker build -t shopizer
+    $ docker run -d -v /tmp:/tmp -p 8080:8080 shopizer
+	
 Run the application from Tomcat 
 -------------------
 copy sm-shop/target/ROOT.war to tomcat or any other application server deployment dir
