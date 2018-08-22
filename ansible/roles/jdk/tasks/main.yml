@@ -1,0 +1,15 @@
+---
+- name: Copy JDK1.8 rpm
+  copy:
+    src: ../files/download_JDK.sh
+    dest: /tmp
+    owner: root
+    group: root
+    mode: 0755
+  become: yes
+
+- name: install JDK rpm from a local file
+  yum:
+    name: /tmp/download_JDK.sh
+    state: present
+  become: yes
