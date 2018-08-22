@@ -27,6 +27,8 @@ From the command line with Docker installed
     $ cd sm-shop
     $ docker build -t shopizer
     $ docker run -d -v /tmp:/tmp -p 8080:8080 shopizer
+    
+    
 	
 Run the application from Tomcat 
 -------------------
