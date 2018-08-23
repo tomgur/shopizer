@@ -1,4 +1,6 @@
 ---
+# this isn't the check i'm good with
+# I would check if swap is on, and if it is the correct size....
 - name: Chceck if swap file exists
   stat: path=/1GB.swap
   register: swapFile
