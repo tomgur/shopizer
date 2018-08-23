@@ -16,6 +16,6 @@
 
 - name: install JDK rpm from a local file
   shell: yum install -y $(ls jdk*.rpm)
-    args:
-      chdir: /tmp/jdk/
+  args:
+    chdir: /tmp/jdk/
   become: yes
