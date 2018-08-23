@@ -1,15 +1,23 @@
 ---
+- name: Check if java1.8 package exists
+  yum:
+    list=docker
+  register: docker
+
 - name: Install Docker
   yum:
     name: docker
     state: latest
   become: yes
+  when: docker.results | selectattr("yumstate", "match", "installed") | list | length == 0
+
 
 - name: add ec2-user to docker group
   user:
     name: ec2-user
     groups: docker
   become: yes
+  when: docker.results | selectattr("yumstate", "match", "installed") | list | length == 0
 
 - name: Copy service init file
   copy:
@@ -19,13 +27,16 @@
     group: root
     mode: 0755
   become: yes
+  when: docker.results | selectattr("yumstate", "match", "installed") | list | length == 0
 
 - name: enable docker service
   command: systemctl enable docker
   become: yes
+  when: docker.results | selectattr("yumstate", "match", "installed") | list | length == 0
 
 - name: start docker service
   service:
     name: docker
     state: started
   become: yes
+  when: docker.results | selectattr("yumstate", "match", "installed") | list | length == 0

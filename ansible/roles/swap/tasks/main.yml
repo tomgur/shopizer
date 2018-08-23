@@ -5,9 +5,6 @@
   stat: path=/1GB.swap
   register: swapFile
 
-- debug: msg="Path exists and is a directory"
-  when: swapFile.stat.isfile is defined and p.stat.isfile
-
 - name: create the file to be used for swap
   command: dd if=/dev/zero of=/1GB.swap bs=1024 count=1024000
   become: yes
