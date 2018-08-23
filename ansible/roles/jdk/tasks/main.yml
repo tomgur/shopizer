@@ -1,15 +1,21 @@
 ---
-- name: Copy JDK1.8 rpm
+- name: Copy diwnload script
   copy:
     src: ../files/download_JDK.sh
-    dest: /tmp
+    dest: /tmp/jdk
     owner: root
     group: root
     mode: 0755
   become: yes
 
+- name: Run the download script
+  shell: ./download_JDK.sh
+  args:
+    chdir: /tmp/jdk
+  become: yes
+
 - name: install JDK rpm from a local file
-  yum:
-    name: /tmp/download_JDK.sh
-    state: present
+  shell: yum install -y $(ls jdk*.rpm)
+    args:
+      chdir: /tmp/jdk/
   become: yes
