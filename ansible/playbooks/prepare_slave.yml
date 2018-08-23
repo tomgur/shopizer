@@ -2,4 +2,8 @@
 - hosts: slaves
   tasks:
   - include_role:
-      name: ../roles/jenkins_slave
+      name: ../roles/swap
+  - include_role:
+      name: ../roles/jdk
+  - include_role:
+      name: ../roles/docker_host
