@@ -2,7 +2,7 @@
 - name: Copy diwnload script
   copy:
     src: ../files/download_JDK.sh
-    dest: /tmp/jdk
+    dest: /tmp/jdk/
     owner: root
     group: root
     mode: 0755
@@ -11,7 +11,7 @@
 - name: Run the download script
   shell: ./download_JDK.sh
   args:
-    chdir: /tmp/jdk
+    chdir: /tmp/jdk/
   become: yes
 
 - name: install JDK rpm from a local file
