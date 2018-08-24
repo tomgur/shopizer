@@ -8,12 +8,12 @@
 - name: create the file to be used for swap
   command: dd if=/dev/zero of=/1GB.swap bs=1024 count=1024000
   become: yes
-  when: swapFile.stat.exists
+  when: swapFile.stat.exists == False
 
 - name: format the file for swap
   command: mkswap /1GB.swap
   become: yes
-  when: swapFile.stat.exists
+  when: swapFile.stat.exists == False
 
 - name: change swap file permissions
   file:
@@ -22,12 +22,12 @@
     group: root
     mode: 0600
   become: yes
-  when: swapFile.stat.exists
+  when: swapFile.stat.exists == False
 
 - name: add the file to the system as a swap file
   command: swapon /1GB.swap
   become: yes
-  when: swapFile.stat.exists
+  when: swapFile.stat.exists == False
 
 - name: write swap entry in fstab
   mount:
@@ -39,4 +39,4 @@
     dump: 0
     state: present
   become: yes
-  when: swapFile.stat.exists
+  when: swapFile.stat.exists == False
