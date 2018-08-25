@@ -21,6 +21,10 @@ pipeline {
                             sh "mvn --batch-mode -V -U -e clean test"
                         }
                     }
+                } post {
+                    always {
+                        junit "target/surefire-reports/*.xml"
+                    }
                 }
                 stage('Build aftifacts war & docker image') {
                     steps {
@@ -41,11 +45,6 @@ pipeline {
                                                                     string(name: 'IMAGE_NAME', value: 'shopizer')], wait: false
                         echo 'This is where we would setup integration tests - selnium etc...'
                     }
-                }
-            }
-            post {
-                always {
-                    junit "target/surefire-reports/*.xml"
                 }
             }
         }
