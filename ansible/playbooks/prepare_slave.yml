@@ -1,9 +1,12 @@
 ---
 - hosts: slaves
   tasks:
+  #todo: create /usr/jenkins_slave/
   - include_role:
       name: ../roles/swap
   - include_role:
       name: ../roles/jdk
   - include_role:
       name: ../roles/docker_host
+  - include_role:
+      name: ../roles/git
