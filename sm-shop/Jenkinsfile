@@ -5,51 +5,51 @@ pipeline {
 
             properties {
                 disableConcurrentBuilds()
-                environment {
-                    HEAD_BUILD_NUMBER = "${BUILD_NUMBER}"
+            }
+            environment {
+                HEAD_BUILD_NUMBER = "${BUILD_NUMBER}"
+            }
+            timestamps {
+                stage('Build') {
+                    steps {
+                        echo '------------ Building ------------'
+                        withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
+                            sh "mvn --batch-mode -V -U -e clean compile"
+                        }
+                    }
                 }
-                timestamps {
-                    stage('Build') {
-                        steps {
-                            echo '------------ Building ------------'
-                            withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
-                                sh "mvn --batch-mode -V -U -e clean compile"
-                            }
+                stage('Test') {
+                    steps {
+                        echo '------------ Testing ------------'
+                        withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
+                            sh "mvn --batch-mode -V -U -e clean test"
                         }
                     }
-                    stage('Test') {
-                        steps {
-                            echo '------------ Testing ------------'
-                            withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
-                                sh "mvn --batch-mode -V -U -e clean test"
-                            }
+                }
+                stage('Build aftifacts war & docker image') {
+                    steps {
+                        echo '------------ Building the WAR ------------'
+                        withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
+                            sh "mvn --batch-mode -V -U -e clean package -DskipTests"
                         }
-                    }
-                    stage('Build aftifacts war & docker image') {
-                        steps {
-                            echo '------------ Building the WAR ------------'
-                            withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
-                                sh "mvn --batch-mode -V -U -e clean package -DskipTests"
-                            }
-                            echo '------------ Building the Shopizer Docker Image ------------'
-                            build job: 'Build-Docker-Image', parameters: [string(name: 'PARENT_BUILD_NUM', value: "${HEAD_BUILD_NUMBER}")]
-                            archiveArtifacts artifacts: 'sm-shop/target/*.war', onlyIfSuccessful: true
+                        echo '------------ Building the Shopizer Docker Image ------------'
+                        build job: 'Build-Docker-Image', parameters: [string(name: 'PARENT_BUILD_NUM', value: "${HEAD_BUILD_NUMBER}")]
+                        archiveArtifacts artifacts: 'sm-shop/target/*.war', onlyIfSuccessful: true
 //                Deploy should be here....
-                        }
-                    }
-                    stage('Integration testing') {
-                        steps {
-                            echo "Running shopize:${BUILD_NUMBER} docker image"
-                            build job: 'Run-Docker-Image', parameters: [string(name: 'IMAGE_VERSION', value: "${HEAD_BUILD_NUMBER}"),
-                                                                        string(name: 'IMAGE_NAME', value: 'shopizer')], wait: false
-                            echo 'This is where we would setup integration tests - selnium etc...'
-                        }
                     }
                 }
-                post {
-                    always {
-                        junit "target/surefire-reports/*.xml"
+                stage('Integration testing') {
+                    steps {
+                        echo "Running shopize:${BUILD_NUMBER} docker image"
+                        build job: 'Run-Docker-Image', parameters: [string(name: 'IMAGE_VERSION', value: "${HEAD_BUILD_NUMBER}"),
+                                                                    string(name: 'IMAGE_NAME', value: 'shopizer')], wait: false
+                        echo 'This is where we would setup integration tests - selnium etc...'
                     }
+                }
+            }
+            post {
+                always {
+                    junit "target/surefire-reports/*.xml"
                 }
             }
         }
