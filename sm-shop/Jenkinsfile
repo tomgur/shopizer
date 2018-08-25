@@ -37,28 +37,23 @@ pipeline {
                 withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
                     sh "mvn --batch-mode -V -U -e clean package -DskipTests"
                 }
+                echo '------------ Deploying the WAR to nexus ------------'
+                withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
+                    sh "mvn -V -U -e clean deploy -DskipTests"
+                }
                 echo '------------ Building the Shopizer Docker Image ------------'
-                parallel(
-                        a: {
-                            build job: 'Build-Docker-Image', parameters: [string(name: 'PARENT_BUILD_NUM', value: "${HEAD_BUILD_NUMBER}")]
-                        },
-                        b: {
-                            withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
-                                sh "mvn -V -U -e clean deploy -DskipTests"
-                            }
-                        }
-                )
-
-//                Deploy should be here....
-            }
-        }
-        stage('Integration testing') {
-            steps {
-                echo "Running shopize:${BUILD_NUMBER} docker image"
-                build job: 'Run-Docker-Image', parameters: [string(name: 'IMAGE_VERSION', value: "${HEAD_BUILD_NUMBER}"),
-                                                            string(name: 'IMAGE_NAME', value: "${REGISTRY}/shopizer")], wait: false
-                echo 'This is where we would setup integration tests - selnium etc...'
+                build job: 'Build-Docker-Image', parameters: [string(name: 'PARENT_BUILD_NUM', value: "${HEAD_BUILD_NUMBER}")]
             }
         }
     }
+}
+stage('Integration testing') {
+    steps {
+        echo "Running shopize:${BUILD_NUMBER} docker image"
+        build job: 'Run-Docker-Image', parameters: [string(name: 'IMAGE_VERSION', value: "${HEAD_BUILD_NUMBER}"),
+                                                    string(name: 'IMAGE_NAME', value: "${REGISTRY}/shopizer")], wait: false
+        echo 'This is where we would setup integration tests - selnium etc...'
+    }
+}
+}
 }
