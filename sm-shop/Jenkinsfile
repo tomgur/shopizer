@@ -4,6 +4,7 @@ pipeline {
 
     environment {
         HEAD_BUILD_NUMBER = "${BUILD_NUMBER}"
+        WORKSPACE = "${WORKSPACE}"
     }
 
     options { disableConcurrentBuilds() }
@@ -26,7 +27,7 @@ pipeline {
             }
             post {
                 always {
-                    junit "target/surefire-reports/*.xml"
+                    junit "**/target/surefire-reports/*.xml"
                 }
             }
         }
