@@ -1,9 +1,13 @@
 #!groovy
+pipeline {
+    agent { label 'slave' }
 
-node('slave') {
     environment {
         HEAD_BUILD_NUMBER = "${BUILD_NUMBER}"
     }
+
+    options { disableConcurrentBuilds() }
+
     stages {
         stage('Build') {
             steps {
