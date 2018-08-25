@@ -1,13 +1,10 @@
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p" xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:context="http://www.springframework.org/schema/context" xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:task="http://www.springframework.org/schema/task"
-	xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation="
-   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
-   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-   http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
-   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
-   http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+
+
+
+
    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
 	
@@ -31,7 +28,7 @@
 				<prop key="PRODUCT_IMAGE_MAX_SIZE">9000000</prop>
 				<prop key="IMAGE_FORMATS">jpg|png|gif</prop>
 				
-				<prop key="POPULATE_TEST_DATA">false</prop>
+				<prop key="POPULATE_TEST_DATA">true</prop>
 				<prop key="SHOP_SCHEME">http</prop>
 				<!-- when removing the context path from the url put that value to blank (nothing) otherwise put the uri for the web app eg /sm-shop -->
 				<prop key="CONTEXT_PATH"></prop>
