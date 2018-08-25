@@ -1,12 +1,11 @@
 #!groovy
 pipeline {
-    node('slave') {
+    agent ('label=slave') {
+        options { disableConcurrentBuilds() }
+        environment {
+            HEAD_BUILD_NUMBER = "${BUILD_NUMBER}"
+        }
         timestamps {
-            options { disableConcurrentBuilds() }
-            environment {
-                HEAD_BUILD_NUMBER = "${BUILD_NUMBER}"
-            }
-
             stages {
                 stage('Build') {
                     steps {
