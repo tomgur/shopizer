@@ -2,9 +2,6 @@
 pipeline {
     node('slave') {
         stages {
-            properties {
-                disableConcurrentBuilds()
-            }
             environment {
                 HEAD_BUILD_NUMBER = "${BUILD_NUMBER}"
             }
