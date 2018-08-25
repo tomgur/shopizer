@@ -41,10 +41,18 @@
   become: yes
   when: docker.results | selectattr("yumstate", "match", "installed") | list | length == 0
 
+- name: create a directory for the docker registry's cert
+  file:
+    path: /etc/docker/certs.d/ec2-18-130-226-162.eu-west-2.compute.amazonaws.com/
+    state: directory
+    owner: root
+    group: root
+  become: yes
+
 - name: add the docker registry crt for the daemon
   copy:
     src: ../files/18.130.226.162.crt
     dest: /etc/docker/certs.d/ec2-18-130-226-162.eu-west-2.compute.amazonaws.com/ca.crt
-    owner: ec2-user
-    group: ec2-user
+    owner: root
+    group: root
   become: yes
