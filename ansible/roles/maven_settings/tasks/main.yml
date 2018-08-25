@@ -1,4 +1,9 @@
 ---
+- name: Chceck if settings.xml exists
+  stat: path=/home/ec2-user/.m2/settings.xml
+  register: settingsFile
+
+
 - name: create the .m2 dir
   file:
     path: /home/ec2-user/.m2/
@@ -6,13 +11,14 @@
     owner: ec2-user
     group: ec2-user
   become: yes
+  when: settingsFile.stat.exists == false
 
 - name: Copy service init file
   copy:
     src: ../files/settings.xml
     dest: /home/ec2-user/.m2/settings.xml
-    owner: root
-    group: root
+    owner: ec2-user
+    group: ec2-user
     mode: 0755
   become: yes
-  when: docker.results | selectattr("yumstate", "match", "installed") | list | length == 0
+  when: settingsFile.stat.exists == false
