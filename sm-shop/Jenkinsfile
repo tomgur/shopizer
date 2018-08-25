@@ -1,6 +1,7 @@
 #!groovy
 pipeline {
     node('slave') {
+        options { disableConcurrentBuilds() }
         environment {
             HEAD_BUILD_NUMBER="${BUILD_NUMBER}"
         }
