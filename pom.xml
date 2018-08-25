@@ -174,4 +174,11 @@
 
 	</dependencyManagement>
 
+	<distributionManagement>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<url>http://ec2-18-130-226-162.eu-west-2.compute.amazonaws.com:8081/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 </project>

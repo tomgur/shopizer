@@ -38,8 +38,17 @@ pipeline {
                     sh "mvn --batch-mode -V -U -e clean package -DskipTests"
                 }
                 echo '------------ Building the Shopizer Docker Image ------------'
-                build job: 'Build-Docker-Image', parameters: [string(name: 'PARENT_BUILD_NUM', value: "${HEAD_BUILD_NUMBER}")]
-                archiveArtifacts artifacts: 'sm-shop/target/*.war', onlyIfSuccessful: true
+                parallel(
+                        a: {
+                            build job: 'Build-Docker-Image', parameters: [string(name: 'PARENT_BUILD_NUM', value: "${HEAD_BUILD_NUMBER}")]
+                        },
+                        b: {
+                            withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
+                                sh "mvn -V -U -e clean deploy -DskipTests"
+                            }
+                        }
+                )
+
 //                Deploy should be here....
             }
         }
