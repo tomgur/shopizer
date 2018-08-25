@@ -1,6 +1,6 @@
 #!groovy
-timestamps {
-    pipeline {
+pipeline {
+    timestamps {
         node('slave') {
             options { disableConcurrentBuilds() }
             environment {
