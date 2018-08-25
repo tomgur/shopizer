@@ -45,14 +45,13 @@ pipeline {
                 build job: 'Build-Docker-Image', parameters: [string(name: 'PARENT_BUILD_NUM', value: "${HEAD_BUILD_NUMBER}")]
             }
         }
-    }
-
-    stage('Integration testing') {
-        steps {
-            echo "Running shopize:${BUILD_NUMBER} docker image"
-            build job: 'Run-Docker-Image', parameters: [string(name: 'IMAGE_VERSION', value: "${HEAD_BUILD_NUMBER}"),
-                                                        string(name: 'IMAGE_NAME', value: "${REGISTRY}/shopizer")], wait: false
-            echo 'This is where we would setup integration tests - selnium etc...'
+        stage('Integration testing') {
+            steps {
+                echo "Running shopize:${BUILD_NUMBER} docker image"
+                build job: 'Run-Docker-Image', parameters: [string(name: 'IMAGE_VERSION', value: "${HEAD_BUILD_NUMBER}"),
+                                                            string(name: 'IMAGE_NAME', value: "${REGISTRY}/shopizer")], wait: false
+                echo 'This is where we would setup integration tests - selnium etc...'
+            }
         }
     }
 }
