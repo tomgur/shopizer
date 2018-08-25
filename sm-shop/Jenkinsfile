@@ -4,7 +4,7 @@ pipeline {
 
     environment {
         HEAD_BUILD_NUMBER = "${BUILD_NUMBER}"
-        REGISTRY = "${REGISTRY}"
+        REGISTRY = "ec2-18-130-226-162.eu-west-2.compute.amazonaws.com"
     }
 
     options { timestamps() }
