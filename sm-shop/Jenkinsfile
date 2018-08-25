@@ -4,10 +4,9 @@ pipeline {
 
     environment {
         HEAD_BUILD_NUMBER = "${BUILD_NUMBER}"
-        WORKSPACE = "${WORKSPACE}"
     }
 
-    options { disableConcurrentBuilds() }
+    options { disableConcurrentBuilds() timestamps() }
 
     stages {
         stage('Build') {
