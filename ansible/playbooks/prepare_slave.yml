@@ -1,7 +1,13 @@
 ---
 - hosts: slaves
   tasks:
-  #todo: create /usr/jenkins_slave/
+  - name: Create the /usr/jenkins_slave directory
+    file:
+      path: /usr/jenkins_slave
+      owner: ec2-user
+      group: ec2-user
+      state: directory
+    become: yes
   - include_role:
       name: ../roles/swap
   - include_role:
@@ -10,3 +16,5 @@
       name: ../roles/docker_host
   - include_role:
       name: ../roles/git
+  - include_role:
+      name: ../roles/maven_settings
