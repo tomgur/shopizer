@@ -1,14 +1,14 @@
 #!groovy
 pipeline {
-    node ('slave') {
-        properties {
-            disableConcurrentBuilds()
-        }
-        environment {
-            HEAD_BUILD_NUMBER = "${BUILD_NUMBER}"
-        }
-        timestamps {
-            stages {
+    node('slave') {
+        stages {
+            properties {
+                disableConcurrentBuilds()
+            }
+            environment {
+                HEAD_BUILD_NUMBER = "${BUILD_NUMBER}"
+            }
+            timestamps {
                 stage('Build') {
                     steps {
                         echo '------------ Building ------------'
