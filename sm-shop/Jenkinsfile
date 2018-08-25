@@ -6,7 +6,7 @@ pipeline {
         HEAD_BUILD_NUMBER = "${BUILD_NUMBER}"
     }
 
-    options { disableConcurrentBuilds() timestamps() }
+    options { timestamps() }
 
     stages {
         stage('Build') {
