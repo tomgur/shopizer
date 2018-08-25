@@ -24,6 +24,10 @@ pipeline {
                     sh "mvn --batch-mode -V -U -e clean test"
                 }
             }
+        } post {
+            always {
+                junit "target/surefire-reports/*.xml"
+            }
         }
         stage('Build aftifacts war & docker image') {
             steps {
