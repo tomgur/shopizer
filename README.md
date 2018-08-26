@@ -11,7 +11,13 @@ The Project is a Java open source e-commerce software forked from Github
 To get the code:
 -------------------
 Clone the repository:
-$ git clone git://github.com/tomgur/shopizer.git
+    
+    $ git clone https://github.com/tomgur/shopizer.git
+
+# CURRENT WORKING BRANCH
+The demo will only work on branch (Jenkins job dependencies)
+
+    toms_2.2.0
 
 To build the application:
 -------------------	
@@ -48,12 +54,14 @@ Jenkins is running in a Docker container in an EC2 instance
 
 http://ec2-18-130-111-175.eu-west-2.compute.amazonaws.com:8080
 
-Push to this github repo will trigger a webhook 
+* Push to this github repo will trigger a webhook 
 Calling the shopizer-pipeline job
+* Test Reposts are analized on the pipeline build
+* Slaves can be spawned in AWS by use of the AWS-EC2 plugin 
 
 Ansible
 -------
-Docker enabled hosts were configured with the install_docker playbook under ansible/playbooks
+All configuration management was done with ansible. Playbooks and roles can be seen in ansible/playbooks
 
 Nexus
 -----
@@ -63,4 +71,16 @@ Docker Registry
 ----------------
 *UNSECURE - Uses self-signed certificate*
 
-https://ec2-18-130-226-162.eu-west-2.compute.amazonaws.com/v2/_catalog
+You can run the Docker image from my registry. You will need to:
+save the Registry's CA certificate
+
+    ansible/roles/docker_host/files/18.130.226.162.crt 
+
+on the docker host in 
+
+    /etc/docker/certs.d/ec2-18-130-226-162.eu-west-2.compute.amazonaws.com/ca.cert
+
+To run the image:
+    
+    docker run -d -v /tmp:/tmp -p 8080:8080 ec2-18-130-226-162.eu-west-2.compute.amazonaws.com/shopizer
+
