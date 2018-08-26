@@ -1,5 +1,5 @@
 ---
-- hosts: {{ host }}
+- hosts: '{{ host }}'
   tasks:
   - include_role:
       name: ../roles/docker_host

@@ -1,5 +1,5 @@
 ---
-- hosts: {{ host }}
+- hosts: '{{ host }}'
   tasks:
   - name: Create the /usr/jenkins_slave directory
     file:
