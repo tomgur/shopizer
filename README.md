@@ -14,11 +14,6 @@ Clone the repository:
     
     $ git clone https://github.com/tomgur/shopizer.git
 
-# CURRENT WORKING BRANCH
-The demo will only work on branch (Jenkins job dependencies)
-
-    toms_2.2.0
-
 To build the application:
 -------------------	
 From the command line with Maven installed:
@@ -26,7 +21,7 @@ From the command line with Maven installed:
 	$ cd shopizer
 	$ mvn clean install
 	
-Docker Image - (only after mvn install)
+Build the Docker Image - (only after mvn install)
 ------------
 From the command line with Docker installed
 
@@ -34,7 +29,25 @@ From the command line with Docker installed
     $ docker build -t shopizer
     $ docker run -d -v /tmp:/tmp -p 8080:8080 shopizer
     
+Run the Docker image from my Registry
+----------------
+*UNSECURE - Uses a self-signed certificate*
+
+You can run the Docker image from my registry. 
+You will need to:
+
+* save the Registry's CA certificate
+
+
+    ansible/roles/docker_host/files/18.130.226.162.crt 
+
+on the docker host in 
+
+    /etc/docker/certs.d/ec2-18-130-226-162.eu-west-2.compute.amazonaws.com/ca.cert
+
+To run the image:
     
+    docker run -d -v /tmp:/tmp -p 8080:8080 ec2-18-130-226-162.eu-west-2.compute.amazonaws.com/shopizer
 	
 Run the application from Tomcat 
 -------------------
@@ -66,21 +79,4 @@ All configuration management was done with ansible. Playbooks and roles can be s
 Nexus
 -----
 http://ec2-18-130-226-162.eu-west-2.compute.amazonaws.com:8081/nexus/
-
-Docker Registry
-----------------
-*UNSECURE - Uses self-signed certificate*
-
-You can run the Docker image from my registry. You will need to:
-save the Registry's CA certificate
-
-    ansible/roles/docker_host/files/18.130.226.162.crt 
-
-on the docker host in 
-
-    /etc/docker/certs.d/ec2-18-130-226-162.eu-west-2.compute.amazonaws.com/ca.cert
-
-To run the image:
-    
-    docker run -d -v /tmp:/tmp -p 8080:8080 ec2-18-130-226-162.eu-west-2.compute.amazonaws.com/shopizer
 
