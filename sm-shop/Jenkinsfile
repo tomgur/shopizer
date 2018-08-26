@@ -10,9 +10,8 @@ pipeline {
     options { timestamps() }
 
     stages {
-        stage('Build') {
+        stage('Compile') {
             steps {
-                echo '------------ Building ------------'
                 withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
                     sh "mvn --batch-mode -V -U -e clean compile"
                 }
@@ -20,7 +19,6 @@ pipeline {
         }
         stage('Test') {
             steps {
-                echo '------------ Testing ------------'
                 withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
                     sh "mvn --batch-mode -V -U -e clean test"
                 }
@@ -31,15 +29,14 @@ pipeline {
                 }
             }
         }
-        stage('Build Java') {
+        stage('Build WAR') {
             steps {
-                echo '------------ Building the WAR ------------'
                 withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
                     sh "mvn --batch-mode -V -U -e clean package -DskipTests"
                 }
             }
         }
-        stage('Deploy to Snapshot repository') {
+        stage('Deploy Snapshots') {
             steps {
                 echo '------------ Deploying the WAR to nexus ------------'
                 withEnv(["JAVA_HOME=${tool 'jdk1.8'}", "PATH+MAVEN=${tool 'm2'}/bin:${env.JAVA_HOME}/bin"]) {
@@ -47,12 +44,12 @@ pipeline {
                 }
             }
         }
-        stage('Build and Deploy the Shopizer Docker Image') {
+        stage('Build and Deploy Docker') {
             steps {
                 build job: 'Build-Docker-Image', parameters: [string(name: 'PARENT_BUILD_NUM', value: "${HEAD_BUILD_NUMBER}")]
             }
         }
-        stage('Integration testing') {
+        stage('Integration tests') {
             steps {
                 echo "Running shopize:${BUILD_NUMBER} docker image"
                 build job: 'Run-Docker-Image', parameters: [string(name: 'IMAGE_VERSION', value: "${HEAD_BUILD_NUMBER}"),
@@ -65,7 +62,7 @@ pipeline {
                 echo "Run the release plugin, tag the git revision, change the POM versions to new dev version"
             }
         }
-        stage('Upload New Version artifacts to production repositories') {
+        stage('Upload to production repositories') {
             steps {
                 echo "Deploying new Version to production repositories"
             }
