@@ -55,5 +55,12 @@ Ansible
 -------
 Docker enabled hosts were configured with the install_docker playbook under ansible/playbooks
 
+Nexus
+-----
+http://ec2-18-130-226-162.eu-west-2.compute.amazonaws.com:8081/nexus/
 
+Docker Registry
+----------------
+*UNSECURE - Uses self-signed certificate*
 
+https://ec2-18-130-226-162.eu-west-2.compute.amazonaws.com/v2/_catalog
